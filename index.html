@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Serial Debugger</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1>Web Serial Debugger</h1>
+      <p id="supportMessage" class="support-message" hidden>
+        当前浏览器不支持 Web Serial API，请使用 Chrome 或 Edge。
+      </p>
+    </header>
+
+    <section class="toolbar" aria-label="串口连接控制">
+      <div class="toolbar-row">
+        <label class="field baud-rate-field">
+          <span>波特率</span>
+          <select id="baudRate">
+            <option value="9600">9600</option>
+            <option value="19200">19200</option>
+            <option value="38400">38400</option>
+            <option value="57600">57600</option>
+            <option value="115200" selected>115200</option>
+            <option value="230400">230400</option>
+            <option value="460800">460800</option>
+            <option value="921600">921600</option>
+          </select>
+        </label>
+
+        <button id="connectButton" type="button">连接串口</button>
+        <button id="disconnectButton" type="button" disabled>断开串口</button>
+        <button id="clearButton" type="button">清空接收区</button>
+        <button id="saveLogButton" type="button">保存日志</button>
+      </div>
+
+      <div class="toolbar-row">
+        <label class="checkbox-field">
+          <input id="hexDisplay" type="checkbox">
+          <span>HEX 显示</span>
+        </label>
+        <label class="checkbox-field">
+          <input id="pauseReceiveDisplay" type="checkbox">
+          <span>暂停接收显示</span>
+        </label>
+        <label class="checkbox-field">
+          <input id="autoScroll" type="checkbox" checked>
+          <span>自动滚动</span>
+        </label>
+        <label class="checkbox-field">
+          <input id="showTimestamp" type="checkbox" checked>
+          <span>显示时间戳</span>
+        </label>
+      </div>
+    </section>
+
+    <div id="statusBar" class="status-bar" role="status" aria-live="polite">未连接</div>
+
+    <section class="terminal-panel" aria-label="串口接收显示区域">
+      <pre id="receiveArea" class="receive-area"></pre>
+    </section>
+
+    <section class="send-panel" aria-label="串口发送控制">
+      <input id="sendInput" type="text" placeholder="输入要发送的内容" autocomplete="off">
+      <label class="field send-ending-field">
+        <span>发送结尾</span>
+        <select id="sendEnding">
+          <option value="none">None</option>
+          <option value="lf">LF</option>
+          <option value="crlf" selected>CRLF</option>
+        </select>
+      </label>
+      <label class="checkbox-field hex-send-field">
+        <input id="hexSend" type="checkbox">
+        <span>HEX 发送</span>
+      </label>
+      <button id="sendButton" type="button" disabled>发送</button>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+:root {
+  color-scheme: dark;
+  font-family: Consolas, "Courier New", monospace;
+  background: #0b0f14;
+  color: #d8f6e7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #0b0f14;
+}
+
+.app {
+  width: min(960px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.app-header {
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin: 0 0 12px;
+  color: #7dffb2;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.support-message {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #ff6b6b;
+  background: #2a1013;
+  color: #ffd6d6;
+}
+
+.toolbar {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.toolbar-row,
+.send-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  color: #a7c8b8;
+  font-size: 14px;
+}
+
+.checkbox-field {
+  display: flex;
+  flex: 0 0 auto;
+  min-height: 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid #2f4a3d;
+  border-radius: 6px;
+  background: #111923;
+  color: #a7c8b8;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.checkbox-field input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #7dffb2;
+}
+
+select,
+input,
+button {
+  min-height: 40px;
+  border: 1px solid #2f4a3d;
+  border-radius: 6px;
+  background: #111923;
+  color: #d8f6e7;
+  font: inherit;
+}
+
+select,
+input {
+  padding: 0 12px;
+}
+
+.baud-rate-field {
+  flex: 0 0 auto;
+}
+
+#baudRate {
+  width: 120px;
+}
+
+button {
+  padding: 0 16px;
+  cursor: pointer;
+  background: #153724;
+  color: #8fffc0;
+}
+
+button:hover:not(:disabled) {
+  background: #1f4b33;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.status-bar {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #284537;
+  border-radius: 6px;
+  background: #07100c;
+  color: #9effbf;
+  font-size: 14px;
+}
+
+.terminal-panel {
+  min-height: 420px;
+  margin-bottom: 14px;
+  border: 1px solid #284537;
+  border-radius: 8px;
+  background: #05080c;
+  box-shadow: inset 0 0 0 1px #0d1711;
+}
+
+.receive-area {
+  height: 420px;
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #76ff9f;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.send-panel {
+  margin-bottom: 0;
+}
+
+#sendInput {
+  flex: 1 1 260px;
+}
+
+.send-ending-field {
+  flex: 0 0 140px;
+}
+
+.hex-send-field {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 560px) {
+  .app {
+    width: min(100vw - 20px, 960px);
+    padding: 20px 0;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .toolbar-row button,
+  .toolbar-row .field,
+  .send-ending-field,
+  .send-panel button {
+    width: 100%;
+  }
+
+  .checkbox-field {
+    width: auto;
+  }
+}
