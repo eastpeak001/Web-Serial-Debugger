@@ -1,8 +1,23 @@
 :root {
-  color-scheme: dark;
-  font-family: Consolas, "Courier New", monospace;
-  background: #0b0f14;
-  color: #d8f6e7;
+  color-scheme: light;
+  font-family: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  --accent: #007aff;
+  --accent-hover: #006edb;
+  --ink: #1d1d1f;
+  --muted: #6e6e73;
+  --line: #e5e5ea;
+  --card: #ffffff;
+  --soft: #f5f5f7;
+  --danger: #b42318;
+  --danger-soft: #fff1f1;
+  --success: #188038;
+  --success-soft: #effaf2;
+  --terminal: #fbfbfd;
+  --terminal-text: #1d1d1f;
+  --chart: #ffffff;
+  --chart-line: rgba(0, 0, 0, 0.11);
 }
 
 * {
@@ -12,69 +27,225 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: #0b0f14;
+  background: #f5f5f7;
 }
 
 .app {
-  width: min(960px, calc(100vw - 32px));
+  width: min(1220px, calc(100vw - 28px));
   margin: 0 auto;
-  padding: 32px 0;
+  padding: 8px 0;
 }
 
 .app-header {
-  margin-bottom: 20px;
+  margin-bottom: 6px;
 }
 
 h1 {
-  margin: 0 0 12px;
-  color: #7dffb2;
-  font-size: 32px;
-  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.28px;
+}
+
+.app-subtitle {
+  max-width: 720px;
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.38;
 }
 
 .support-message {
-  margin: 0;
-  padding: 12px 14px;
-  border: 1px solid #ff6b6b;
-  background: #2a1013;
-  color: #ffd6d6;
+  margin: 18px 0 0;
+  padding: 12px 16px;
+  border: 1px solid #ffd0cc;
+  border-radius: 14px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 14px;
+}
+
+.toolbar,
+.search-panel,
+.stats-bar,
+.terminal-panel,
+.plotter-panel,
+.quick-command-panel,
+.send-panel {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
+}
+
+[hidden] {
+  display: none !important;
 }
 
 .toolbar {
   display: grid;
-  gap: 10px;
-  margin-bottom: 14px;
-  width: 100%;
+  gap: 5px;
+  margin-bottom: 6px;
+  padding: 7px 8px;
 }
 
 .toolbar-row,
-.send-panel {
+.search-panel,
+.plotter-controls,
+.send-controls,
+.quick-command-buttons,
+.quick-command-editor,
+.status-row,
+.stats-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   align-items: center;
-  justify-content: flex-start;
-  width: 100%;
+  gap: 6px;
 }
 
 .field {
   display: grid;
   gap: 6px;
-  color: #a7c8b8;
-  font-size: 14px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+select,
+input,
+textarea,
+button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+select,
+input,
+textarea {
+  padding: 0 10px;
+}
+
+select:focus,
+input:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 2px solid rgba(0, 113, 227, 0.28);
+  outline-offset: 2px;
+  border-color: rgba(0, 102, 204, 0.45);
+}
+
+.connection-mode-field,
+.baud-rate-field {
+  flex: 0 0 auto;
+}
+
+#connectionMode {
+  width: 150px;
+}
+
+#baudRate {
+  width: 124px;
+}
+
+.ble-config-row {
+  padding-top: 2px;
+}
+
+.ble-uuid-field {
+  flex: 1 1 260px;
+}
+
+.ble-uuid-field input {
+  width: 100%;
+  font-family: "SF Mono", "Cascadia Mono", Consolas, "Courier New", monospace;
+  font-size: 12px;
+}
+
+button {
+  min-height: 34px;
+  padding: 0 14px;
+  cursor: pointer;
+  border-color: transparent;
+  background: #f2f2f7;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
+  transition: transform 120ms ease, background-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  background: #e8e8ee;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+#connectButton,
+#sendButton,
+#applyPlotterVariablesButton {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.22);
+}
+
+#connectButton:hover:not(:disabled),
+#sendButton:hover:not(:disabled),
+#applyPlotterVariablesButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+#clearButton,
+#clearHistoryButton,
+#clearSearchButton,
+#clearPlotterButton {
+  border-color: #ffd8d8;
+  background: #fff1f1;
+  color: #c62828;
+}
+
+#disconnectButton,
+#saveLogButton,
+#copyLogButton,
+#copyDeviceInfoButton,
+#resetSettingsButton,
+#resetPlotterZoomButton,
+#togglePlotterViewButton {
+  background: #f2f2f7;
+  color: var(--ink);
+}
+
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.34;
+  box-shadow: none;
+  filter: saturate(0.75);
 }
 
 .checkbox-field {
-  display: flex;
+  display: inline-flex;
   flex: 0 0 auto;
-  min-height: 40px;
+  min-height: 34px;
   align-items: center;
-  gap: 8px;
-  padding: 0 10px;
-  border: 1px solid #2f4a3d;
-  border-radius: 6px;
-  background: #111923;
-  color: #a7c8b8;
+  gap: 7px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
   font-size: 14px;
   white-space: nowrap;
 }
@@ -83,116 +254,337 @@ h1 {
   width: 16px;
   height: 16px;
   margin: 0;
-  accent-color: #7dffb2;
+  accent-color: var(--accent);
 }
 
-select,
-input,
-button {
-  min-height: 40px;
-  border: 1px solid #2f4a3d;
-  border-radius: 6px;
-  background: #111923;
-  color: #d8f6e7;
-  font: inherit;
-}
-
-select,
-input {
-  padding: 0 12px;
-}
-
-.baud-rate-field {
-  flex: 0 0 auto;
-}
-
-#baudRate {
-  width: 120px;
-}
-
-button {
-  padding: 0 16px;
-  cursor: pointer;
-  background: #153724;
-  color: #8fffc0;
-}
-
-button:hover:not(:disabled) {
-  background: #1f4b33;
-}
-
-button:disabled,
-input:disabled,
-select:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+.status-row {
+  margin: 0 0 6px;
 }
 
 .status-bar {
-  margin: 0 0 14px;
-  padding: 10px 12px;
-  border: 1px solid #284537;
-  border-radius: 6px;
-  background: #07100c;
-  color: #9effbf;
+  flex: 1 1 320px;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--muted);
   font-size: 14px;
+}
+
+.status-bar.status-success {
+  border-color: #ccebd6;
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.status-bar.status-error {
+  border-color: #ffd4d1;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.search-panel {
+  margin-bottom: 6px;
+  padding: 7px 8px;
+}
+
+#searchInput {
+  flex: 1 1 300px;
+  border-radius: 999px;
+}
+
+.quick-search-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.quick-search-button,
+.quick-command-button {
+  min-height: 34px;
+  padding: 0 13px;
+  border-radius: 999px;
+  background: #f5f5f7;
+  color: var(--accent);
+}
+
+.search-match-count {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.stats-bar {
+  gap: 6px 12px;
+  margin: 0 0 6px;
+  padding: 6px 8px;
+  color: var(--muted);
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.stats-bar span {
+  white-space: nowrap;
+}
+
+.log-limit-field,
+.plotter-scale-field {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+#maxLogLines {
+  width: 124px;
 }
 
 .terminal-panel {
-  min-height: 420px;
-  margin-bottom: 14px;
-  border: 1px solid #284537;
-  border-radius: 8px;
-  background: #05080c;
-  box-shadow: inset 0 0 0 1px #0d1711;
+  min-height: 0;
+  margin-bottom: 6px;
+  padding: 5px;
+  background: #fff;
 }
 
 .receive-area {
-  height: 420px;
+  height: 230px;
   margin: 0;
-  padding: 14px;
+  padding: 9px 10px;
   overflow: auto;
+  border: 1px solid #d2d2d7;
+  border-radius: 12px;
+  background: var(--terminal);
   white-space: pre-wrap;
   word-break: break-word;
-  color: #76ff9f;
-  font-size: 14px;
+  color: var(--terminal-text);
+  font-family: "SF Mono", "Cascadia Mono", Consolas, "Courier New", monospace;
+  font-size: 12.5px;
   line-height: 1.5;
+  scrollbar-color: #c7c7cc transparent;
+  scrollbar-width: thin;
+}
+
+.receive-area:empty::before {
+  content: "Serial log output will appear here";
+  color: #9a9aa2;
+}
+
+.receive-area::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.receive-area::-webkit-scrollbar-thumb {
+  border: 3px solid var(--terminal);
+  border-radius: 999px;
+  background: #c7c7cc;
+}
+
+.plotter-panel {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 6px;
+  padding: 7px 8px;
+}
+
+#plotterVariables {
+  flex: 1 1 300px;
+}
+
+#plotterScaleMode {
+  width: 164px;
+}
+
+.plotter-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  min-height: 20px;
+  align-items: center;
+  padding: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.plotter-legend-item {
+  white-space: nowrap;
+}
+
+.plotter-canvas-wrap {
+  position: relative;
+}
+
+.plotter-canvas {
+  width: 100%;
+  height: 160px;
+  margin-top: 2px;
+  border: 1px solid #c7c7cc;
+  border-radius: 12px;
+  background: var(--chart);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+.plotter-tooltip {
+  position: absolute;
+  z-index: 5;
+  max-width: 220px;
+  padding: 8px 10px;
+  border: 1px solid #d2d2d7;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #1d1d1f;
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(14px);
+}
+
+.quick-command-panel {
+  display: none;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+}
+
+.quick-command-title {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.quick-command-buttons {
+  width: 100%;
+}
+
+.quick-command-editor {
+  display: grid;
+  grid-template-columns: minmax(420px, 1fr) auto;
+  gap: 10px;
+}
+
+#quickCommandInput {
+  min-width: 360px;
 }
 
 .send-panel {
-  margin-bottom: 0;
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 400px);
+  align-items: stretch;
+  gap: 7px;
+  padding: 7px 8px;
 }
 
-#sendInput {
-  flex: 1 1 260px;
+.send-input-wrap {
+  min-width: 0;
 }
 
-.send-ending-field {
-  flex: 0 0 140px;
+.send-input {
+  width: 100%;
+  height: 34px;
+  padding-top: 7px;
+  resize: none;
 }
 
-.hex-send-field {
+.send-input.multiline {
+  min-height: 64px;
+  height: 64px;
+  padding-top: 8px;
+}
+
+.send-controls {
+  align-content: flex-start;
+}
+
+.send-ending-field,
+.send-history-field {
+  flex: 1 1 150px;
+}
+
+#sendHistory {
+  width: 100%;
+}
+
+.hex-send-field,
+#clearHistoryButton,
+#sendButton {
   flex: 0 0 auto;
 }
 
-@media (max-width: 560px) {
+@media (min-width: 980px) {
   .app {
-    width: min(100vw - 20px, 960px);
-    padding: 20px 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(360px, 1fr);
+    gap: 6px 8px;
+    align-items: start;
   }
 
-  h1 {
-    font-size: 26px;
+  .app-header,
+  .toolbar,
+  .status-row,
+  .search-panel,
+  .stats-bar,
+  .send-panel {
+    grid-column: 1 / -1;
+  }
+
+  .terminal-panel {
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+
+  .plotter-panel {
+    grid-column: 2;
+    margin-bottom: 0;
+  }
+
+  .receive-area {
+    height: 240px;
+  }
+
+  .plotter-canvas {
+    height: 168px;
+  }
+}
+
+@media (max-width: 760px) {
+  .app {
+    width: min(100vw - 20px, 1180px);
+    padding: 32px 0 22px;
   }
 
   .toolbar-row button,
   .toolbar-row .field,
-  .send-ending-field,
-  .send-panel button {
+  .search-panel button,
+  #copyDeviceInfoButton,
+  #plotterVariables,
+  #plotterScaleMode,
+  #applyPlotterVariablesButton,
+  #clearPlotterButton,
+  #resetPlotterZoomButton,
+  #togglePlotterViewButton {
     width: 100%;
   }
 
-  .checkbox-field {
-    width: auto;
+  .send-panel,
+  .quick-command-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .send-controls button,
+  .send-history-field,
+  .send-ending-field,
+  #quickCommandInput,
+  #applyQuickCommandsButton {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .plotter-scale-field {
+    flex: 1 1 100%;
   }
 }

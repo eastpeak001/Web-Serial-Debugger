@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web Serial Debugger</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=49">
 </head>
 <body>
   <main class="app">
     <header class="app-header">
       <h1>Web Serial Debugger</h1>
+      <p class="app-subtitle">Browser-based USB serial terminal, plotter and embedded debugging tool.</p>
       <p id="supportMessage" class="support-message" hidden>
         当前浏览器不支持 Web Serial API，请使用 Chrome 或 Edge。
       </p>
@@ -17,6 +18,14 @@
 
     <section class="toolbar" aria-label="串口连接控制">
       <div class="toolbar-row">
+        <label class="field connection-mode-field">
+          <span>连接模式</span>
+          <select id="connectionMode">
+            <option value="usb" selected>USB Serial</option>
+            <option value="ble">BLE Bluetooth</option>
+          </select>
+        </label>
+
         <label class="field baud-rate-field">
           <span>波特率</span>
           <select id="baudRate">
@@ -35,6 +44,23 @@
         <button id="disconnectButton" type="button" disabled>断开串口</button>
         <button id="clearButton" type="button">清空接收区</button>
         <button id="saveLogButton" type="button">保存日志</button>
+        <button id="copyLogButton" type="button">复制日志</button>
+        <button id="copyDeviceInfoButton" type="button">复制设备信息</button>
+      </div>
+
+      <div id="bleConfigRow" class="toolbar-row ble-config-row" hidden>
+        <label class="field ble-uuid-field">
+          <span>Service UUID</span>
+          <input id="bleServiceUuid" type="text" value="6e400001-b5a3-f393-e0a9-e50e24dcca9e" autocomplete="off">
+        </label>
+        <label class="field ble-uuid-field">
+          <span>TX Notify Characteristic UUID</span>
+          <input id="bleTxUuid" type="text" value="6e400003-b5a3-f393-e0a9-e50e24dcca9e" autocomplete="off">
+        </label>
+        <label class="field ble-uuid-field">
+          <span>RX Write Characteristic UUID</span>
+          <input id="bleRxUuid" type="text" value="6e400002-b5a3-f393-e0a9-e50e24dcca9e" autocomplete="off">
+        </label>
       </div>
 
       <div class="toolbar-row">
@@ -54,33 +80,131 @@
           <input id="showTimestamp" type="checkbox" checked>
           <span>显示时间戳</span>
         </label>
+        <button id="resetSettingsButton" type="button">恢复默认设置</button>
       </div>
     </section>
 
-    <div id="statusBar" class="status-bar" role="status" aria-live="polite">未连接</div>
+    <div class="status-row">
+      <div id="statusBar" class="status-bar" role="status" aria-live="polite">未连接</div>
+    </div>
+
+    <section class="search-panel" aria-label="接收日志搜索">
+      <input id="searchInput" type="text" placeholder="搜索接收日志" autocomplete="off">
+      <button id="clearSearchButton" type="button">清除搜索</button>
+      <div class="quick-search-buttons" aria-label="快捷搜索">
+        <button class="quick-search-button" type="button" data-keyword="">全部</button>
+        <button class="quick-search-button" type="button" data-keyword="WiFi">WiFi</button>
+        <button class="quick-search-button" type="button" data-keyword="ERROR">ERROR</button>
+        <button class="quick-search-button" type="button" data-keyword="WARN">WARN</button>
+        <button class="quick-search-button" type="button" data-keyword="TX">TX</button>
+        <button class="quick-search-button" type="button" data-keyword="HEX">HEX</button>
+      </div>
+      <label class="checkbox-field">
+        <input id="showOnlyMatches" type="checkbox">
+        <span>仅显示匹配行</span>
+      </label>
+      <span id="searchMatchCount" class="search-match-count" aria-live="polite"></span>
+    </section>
+
+    <section class="stats-bar" aria-label="日志统计栏">
+      <label class="field log-limit-field">
+        <span>最大日志行数</span>
+        <select id="maxLogLines">
+          <option value="200">200</option>
+          <option value="500">500</option>
+          <option value="1000" selected>1000</option>
+          <option value="2000">2000</option>
+          <option value="unlimited">不限制</option>
+        </select>
+      </label>
+      <span id="totalLineCount">总行数：0</span>
+      <span id="matchedLineCount">匹配行数：0</span>
+      <span id="receiveByteCount">接收字节数：0</span>
+      <span id="sendCount">发送次数：0</span>
+    </section>
 
     <section class="terminal-panel" aria-label="串口接收显示区域">
       <pre id="receiveArea" class="receive-area"></pre>
     </section>
 
+    <section class="plotter-panel" aria-label="实时曲线">
+      <div class="plotter-controls">
+        <label class="checkbox-field">
+          <input id="plotterEnabled" type="checkbox">
+          <span>启用曲线显示</span>
+        </label>
+        <input id="plotterVariables" type="text" placeholder="CO2,T,RH,RMS,ax,ay,az" value="CO2,T,RH,RMS">
+        <label class="field plotter-scale-field">
+          <span>曲线缩放</span>
+          <select id="plotterScaleMode">
+            <option value="global" selected>全局缩放</option>
+            <option value="per-variable">每变量独立缩放</option>
+          </select>
+        </label>
+        <button id="applyPlotterVariablesButton" type="button">应用变量</button>
+        <button id="clearPlotterButton" type="button">清空曲线</button>
+        <button id="resetPlotterZoomButton" type="button">重置缩放</button>
+        <button id="togglePlotterViewButton" type="button">隐藏曲线模块</button>
+      </div>
+      <div id="plotterLegend" class="plotter-legend" aria-live="polite"></div>
+      <div id="plotterCanvasWrap" class="plotter-canvas-wrap">
+        <canvas id="plotterCanvas" class="plotter-canvas" width="900" height="260"></canvas>
+        <div id="plotterTooltip" class="plotter-tooltip" hidden></div>
+      </div>
+    </section>
+
+    <section class="quick-command-panel" aria-label="常用命令" hidden>
+      <div class="quick-command-title">常用命令</div>
+      <div id="quickCommandButtons" class="quick-command-buttons">
+        <button class="quick-command-button" type="button" data-command="h">h</button>
+        <button class="quick-command-button" type="button" data-command="help">help</button>
+        <button class="quick-command-button" type="button" data-command="status">status</button>
+        <button class="quick-command-button" type="button" data-command="reset">reset</button>
+        <button class="quick-command-button" type="button" data-command="version">version</button>
+      </div>
+      <div class="quick-command-editor">
+        <input id="quickCommandInput" type="text" value="h,help,status,reset,version" aria-label="编辑常用命令">
+        <button id="applyQuickCommandsButton" type="button">应用命令</button>
+      </div>
+    </section>
+
     <section class="send-panel" aria-label="串口发送控制">
-      <input id="sendInput" type="text" placeholder="输入要发送的内容" autocomplete="off">
-      <label class="field send-ending-field">
-        <span>发送结尾</span>
-        <select id="sendEnding">
-          <option value="none">None</option>
-          <option value="lf">LF</option>
-          <option value="crlf" selected>CRLF</option>
-        </select>
-      </label>
-      <label class="checkbox-field hex-send-field">
-        <input id="hexSend" type="checkbox">
-        <span>HEX 发送</span>
-      </label>
-      <button id="sendButton" type="button" disabled>发送</button>
+      <div class="send-input-wrap">
+        <textarea id="sendInput" class="send-input" rows="1" placeholder="输入要发送的内容" autocomplete="off"></textarea>
+      </div>
+      <div class="send-controls">
+        <label class="field send-history-field">
+          <span>发送历史</span>
+          <select id="sendHistory">
+            <option value="">发送历史</option>
+          </select>
+        </label>
+        <button id="clearHistoryButton" type="button">清空历史</button>
+        <label class="field send-ending-field">
+          <span>发送结尾</span>
+          <select id="sendEnding">
+            <option value="none">None</option>
+            <option value="lf">LF</option>
+            <option value="crlf" selected>CRLF</option>
+          </select>
+        </label>
+        <label class="checkbox-field hex-send-field">
+          <input id="hexSend" type="checkbox">
+          <span>HEX 发送</span>
+        </label>
+        <label class="checkbox-field">
+          <input id="multiLineSend" type="checkbox">
+          <span>多行发送</span>
+        </label>
+        <label class="checkbox-field">
+          <input id="confirmBeforeSend" type="checkbox">
+          <span>发送前确认</span>
+        </label>
+        <button id="sendButton" type="button" disabled>发送</button>
+      </div>
     </section>
   </main>
 
-  <script src="main.js"></script>
+  <script src="main.js?v=43"></script>
 </body>
 </html>
